@@ -5,7 +5,7 @@ import com.company.mz.util.DBConnection;
 
 import java.sql.*;
 
-public class GuestDao implements CrudDao<Guest, String, String> {
+public class GuestDao implements CrudDao<Guest, Guest, String> {
 
     @Override
     public void create(Guest guest) {
@@ -19,12 +19,12 @@ public class GuestDao implements CrudDao<Guest, String, String> {
     }
 
     @Override
-    public Guest read(String s) {
+    public Guest read(Guest guestCome) {
         ResultSet resultSet = null;
         Guest guest = new Guest();
         try(Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(GuestQueries.READ.query)) {
-            statement.setString(1, s);
+            statement.setString(1, guestCome.getName());
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                guest.setId(resultSet.getInt("id"));

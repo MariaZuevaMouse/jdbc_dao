@@ -22,25 +22,24 @@ public class Main {
 
     public static void main(String[] args) {
         //        CRUD Guest
-//        CRUDGuest();
+        CRUDGuest();
 
         //CRUD menu
-//        CRUDMenu();
+        CRUDMenu();
 
         //CRUD Orders
-//        CRUDOrders();
+        CRUDOrders();
 
         //Crud Order Vs Menu
-
         CRUDOrderVsMenu();
 
 
     }
 
     private static void CRUDOrderVsMenu() {
-        Guest guest = new Guest();
-        guest.setName(faker.name().fullName());
+        Guest guest = new Guest().withName(faker.name().fullName());
         guestTable.create(guest);
+
         Orders order = new Orders();
         orderTable.create(order);
         Guest guestRead = (Guest) guestTable.read("Miss Danny Ernser");
@@ -80,7 +79,7 @@ public class Main {
     private static void CRUDMenu() {
         MenuItems dish1 = new MenuItems();
         String dishName1 = faker.food().dish();
-        int priceFirst = 1000;
+        int priceFirst = 1000; //(int)(Math.random()*1000)
         int priceUpdated = 1500;
         dish1.setDishName(dishName1);
         dish1.setPrice(priceFirst);
@@ -93,11 +92,10 @@ public class Main {
     }
 
     private static void CRUDGuest() {
-        Guest guest = new Guest();
-
+        Guest guest ;
         String nameGuest = faker.name().firstName();
-        guest.setName(nameGuest);
         String newNameGuest = faker.name().fullName();
+        guest  = new Guest().withName(nameGuest);
 
 
         guestTable.create(guest);

@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MenuItemsDao implements CrudDao<MenuItems, String, Integer> {
+public class MenuItemsDao implements CrudDao<MenuItems, MenuItems, Integer> {
     @Override
     public void create(MenuItems menuItems) {
         try(Connection connection = DBConnection.getConnection();
@@ -23,12 +23,12 @@ public class MenuItemsDao implements CrudDao<MenuItems, String, Integer> {
     }
 
     @Override
-    public MenuItems read(String s) {
+    public MenuItems read(MenuItems menuItemCome) {
         ResultSet resultSet = null;
         MenuItems menuItem = new MenuItems();
         try(Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(MenuItemQueries.READ.query)) {
-            statement.setString(1, s);
+            statement.setString(1, menuItemCome.getDishName());
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 menuItem.setId(resultSet.getInt("id"));

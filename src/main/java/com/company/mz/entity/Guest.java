@@ -1,12 +1,12 @@
 package com.company.mz.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@With
 @NoArgsConstructor
 @AllArgsConstructor
 public class Guest {
