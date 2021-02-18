@@ -1,5 +1,6 @@
-package com.company.mz.dao;
+package com.company.mz.dao.implementation;
 
+import com.company.mz.dao.interfaces.RelationsCrud;
 import com.company.mz.entity.MenuItems;
 import com.company.mz.entity.OrderVsMenuItems;
 import com.company.mz.entity.Orders;
@@ -11,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OrderVsMenuDao implements RelationsCrud {
+public class OrderVsMenuDaoSQLiteImpl implements RelationsCrud {
     @Override
     public void create(Orders order, MenuItems menuItem, int quantity) {
         OrderVsMenuItems checkExist = read(order, menuItem);

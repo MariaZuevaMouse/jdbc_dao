@@ -1,4 +1,4 @@
-package com.company.mz.dao;
+package com.company.mz.dao.interfaces;
 
 import com.company.mz.entity.MenuItems;
 import com.company.mz.entity.OrderVsMenuItems;

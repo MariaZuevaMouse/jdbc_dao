@@ -34,7 +34,7 @@ public class DBConnection {
         try {
             Class.forName(DB_DRIVER);
             connection = DriverManager.getConnection(DB_URL);
-            System.out.println("database connection successfully created");
+//            System.out.println("database connection successfully created");
         } catch (ClassNotFoundException |SQLException e) {
             e.printStackTrace();
         }
