@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS orders;
 CREATE TABLE IF NOT EXISTS orders (
     id       INTEGER PRIMARY KEY AUTOINCREMENT
                      NOT NULL,
-    order_date     DATETIME    NOT NULL,
+    order_date     TIMESTAMP    NOT NULL,
     guest_id INTEGER REFERENCES Guest (id)
 );
 
