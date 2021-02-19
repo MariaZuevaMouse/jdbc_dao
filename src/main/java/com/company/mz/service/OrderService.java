@@ -3,13 +3,10 @@ package com.company.mz.service;
 import com.company.mz.dao.implementation.OrdersDaoSQLiteImpl;
 import com.company.mz.entity.Guest;
 import com.company.mz.entity.Orders;
-import com.company.mz.util.DBConnection;
 
-import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class OrderService {
     private OrdersDaoSQLiteImpl ordersDaoSQLite;
@@ -35,12 +32,10 @@ public class OrderService {
         System.out.println("Order was updated: " + orders );
     }
 
-
     public void delete(Orders orders) {
         ordersDaoSQLite.delete(orders);
         System.out.println("Order was removed: " + orders);
     }
-
 
     public List<Orders> getAllOrders() {
         List<Orders> allOrders = ordersDaoSQLite.getAllOrders();

@@ -1,7 +1,6 @@
 package com.company.mz.service;
 
 import com.company.mz.dao.implementation.MenuItemsDaoSQLiteImpl;
-import com.company.mz.dao.interfaces.MenuItemsDao;
 import com.company.mz.entity.MenuItems;
 
 import java.util.List;

@@ -1,0 +1,9 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Order Service tests">
+    <test name="Order CRUD test">
+        <packages>
+            <package name="com.company.mz.services.order" />
+        </packages>
+    </test>
+</suite>
