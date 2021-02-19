@@ -3,6 +3,7 @@ package com.company.mz.services.guest;
 import com.company.mz.BaseTest;
 import com.company.mz.entity.Guest;
 import com.company.mz.service.GuestService;
+import com.company.mz.util.DatabaseType;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -10,7 +11,7 @@ public class GuestServiceCreateTest extends BaseTest {
 
     @BeforeClass
     public void beforeClass() {
-        guestService = new GuestService();
+        guestService = new GuestService(DatabaseType.TEST);
     }
 
     @Test

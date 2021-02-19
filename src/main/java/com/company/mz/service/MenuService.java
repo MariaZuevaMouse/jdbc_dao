@@ -2,14 +2,15 @@ package com.company.mz.service;
 
 import com.company.mz.dao.implementation.MenuItemsDaoSQLiteImpl;
 import com.company.mz.entity.MenuItems;
+import com.company.mz.util.DatabaseType;
 
 import java.util.List;
 
 public class MenuService {
     MenuItemsDaoSQLiteImpl menuDao;
 
-    public MenuService() {
-        menuDao = new MenuItemsDaoSQLiteImpl();
+    public MenuService(DatabaseType databaseType) {
+        menuDao = new MenuItemsDaoSQLiteImpl(databaseType);
     }
 
     public void create(MenuItems menuItems) {

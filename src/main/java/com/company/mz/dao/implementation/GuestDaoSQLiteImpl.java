@@ -3,17 +3,21 @@ package com.company.mz.dao.implementation;
 import com.company.mz.dao.interfaces.GuestDao;
 import com.company.mz.entity.Guest;
 import com.company.mz.util.DBConnection;
+import com.company.mz.util.DatabaseType;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuestDaoSQLiteImpl implements GuestDao {
+public class GuestDaoSQLiteImpl extends BaseSQLiteImplClass implements GuestDao {
+
+    public GuestDaoSQLiteImpl(DatabaseType type) {
+        super(type);
+    }
 
     @Override
     public void create(Guest guest) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(GuestQueries.CREATE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(GuestQueries.CREATE.query)) {
             statement.setString(1, guest.getName());
             statement.executeUpdate();
         }catch (SQLException e){
@@ -25,8 +29,7 @@ public class GuestDaoSQLiteImpl implements GuestDao {
     public Guest read(String name) {
         ResultSet resultSet = null;
         Guest guest = new Guest();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(GuestQueries.READ.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(GuestQueries.READ.query)) {
             statement.setString(1, name);
             resultSet = statement.executeQuery();
             if(resultSet.next()){
@@ -49,8 +52,7 @@ public class GuestDaoSQLiteImpl implements GuestDao {
 
     @Override
     public void update(Guest guest) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(GuestQueries.UPDATE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(GuestQueries.UPDATE.query)) {
             statement.setString(1, guest.getName());
             statement.setInt(2, guest.getId());
             final int i = statement.executeUpdate();
@@ -64,8 +66,7 @@ public class GuestDaoSQLiteImpl implements GuestDao {
 
     @Override
     public void delete(Guest guest) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(GuestQueries.DELETE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(GuestQueries.DELETE.query)) {
             statement.setInt(1, guest.getId());
             statement.executeUpdate();
         }catch (SQLException e){
@@ -78,8 +79,7 @@ public class GuestDaoSQLiteImpl implements GuestDao {
         ResultSet resultSet =null;
         Guest guest;
         List<Guest> guestList = new ArrayList<>();
-        try(Connection connection = DBConnection.getConnection();
-        PreparedStatement statement = connection.prepareStatement(GuestQueries.GET_ALL.query)){
+        try(PreparedStatement statement = connection.prepareStatement(GuestQueries.GET_ALL.query)){
             resultSet = statement.executeQuery();
             while(resultSet.next()){
                 guest = new Guest();
@@ -106,8 +106,7 @@ public class GuestDaoSQLiteImpl implements GuestDao {
         ResultSet resultSet =null;
         Guest guest;
         List<Guest> guestList = new ArrayList<>();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(GuestQueries.GET_ALL_ORDER_BYNAME_ASC.query)){
+        try(PreparedStatement statement = connection.prepareStatement(GuestQueries.GET_ALL_ORDER_BYNAME_ASC.query)){
             resultSet = statement.executeQuery();
             while(resultSet.next()){
                 guest = new Guest();
@@ -134,8 +133,7 @@ public class GuestDaoSQLiteImpl implements GuestDao {
         ResultSet resultSet =null;
         Guest guest;
         List<Guest> guestList = new ArrayList<>();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(GuestQueries.GET_ALL_ORDER_BY_NAME_DESC.query)){
+        try(PreparedStatement statement = connection.prepareStatement(GuestQueries.GET_ALL_ORDER_BY_NAME_DESC.query)){
             resultSet = statement.executeQuery();
             while(resultSet.next()){
                 guest = new Guest();
@@ -161,8 +159,7 @@ public class GuestDaoSQLiteImpl implements GuestDao {
     public Guest getGuestById(int id) {
         ResultSet resultSet = null;
         Guest guest = new Guest();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(GuestQueries.GET_BY_ID.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(GuestQueries.GET_BY_ID.query)) {
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if(resultSet.next()){

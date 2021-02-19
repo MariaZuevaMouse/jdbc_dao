@@ -3,6 +3,7 @@ package com.company.mz.service;
 import com.company.mz.dao.implementation.OrdersDaoSQLiteImpl;
 import com.company.mz.entity.Guest;
 import com.company.mz.entity.Orders;
+import com.company.mz.util.DatabaseType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.Map;
 public class OrderService {
     private OrdersDaoSQLiteImpl ordersDaoSQLite;
 
-    public OrderService() {
-        ordersDaoSQLite = new OrdersDaoSQLiteImpl();
+    public OrderService(DatabaseType databaseType) {
+        ordersDaoSQLite = new OrdersDaoSQLiteImpl(databaseType);
     }
 
     public void create(Orders orders) {

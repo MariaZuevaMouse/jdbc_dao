@@ -4,6 +4,7 @@ import com.company.mz.dao.interfaces.OrdersDao;
 import com.company.mz.entity.Guest;
 import com.company.mz.entity.Orders;
 import com.company.mz.util.DBConnection;
+import com.company.mz.util.DatabaseType;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -14,11 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OrdersDaoSQLiteImpl implements OrdersDao {
+public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDao {
+
+    public OrdersDaoSQLiteImpl(DatabaseType type) {
+        super(type);
+    }
+
     @Override
     public void create(Orders orders) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.CREATE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.CREATE.query)) {
 //            statement.setDate(1, Date.valueOf(LocalDate.now()));
             statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
             statement.setInt(2, findLastGuest());
@@ -32,8 +37,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
     public Orders getLastOrder(){
         ResultSet resultSet = null;
         Orders order = new Orders();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_LAST_ORDER.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_LAST_ORDER.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 order.setId(resultSet.getInt("id"));
@@ -58,8 +62,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
     public Orders read(Guest guest) {
         ResultSet resultSet = null;
         Orders order = new Orders();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.READ.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.READ.query)) {
             statement.setInt(1, guest.getId());
             statement.setInt(2, guest.getId());
             resultSet = statement.executeQuery();
@@ -84,8 +87,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
 
     public int findLastGuest() {
         Guest guest = new Guest();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.FIND_LAST_GUEST_ID.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.FIND_LAST_GUEST_ID.query)) {
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
                 guest.setId(resultSet.getInt(1));
@@ -98,8 +100,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
 
     @Override
     public void update(Orders orders) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.UPDATE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.UPDATE.query)) {
             statement.setInt(1, orders.getGuestId());
             statement.setInt(2, orders.getId());
             statement.executeUpdate();
@@ -110,8 +111,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
 
     @Override
     public void delete(Orders orders) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.DELETE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.DELETE.query)) {
             statement.setInt(1,orders.getId());
             statement.executeUpdate();
         }catch (SQLException e){
@@ -124,8 +124,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
         List<Orders> ordersList = new ArrayList<>();
         ResultSet resultSet = null;
         Orders order ;
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_ALL_ORDERS.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_ALL_ORDERS.query)) {
             resultSet = statement.executeQuery();
             while (resultSet.next()){
                 order = new Orders();
@@ -153,8 +152,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
         List<Orders> ordersList = new ArrayList<>();
         ResultSet resultSet = null;
         Orders order = new Orders();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_ALL_ORDERS_IN_DATE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_ALL_ORDERS_IN_DATE.query)) {
             LocalTime timeStart = LocalTime.of(00, 00, 00);
             LocalTime timeEnd = LocalTime.of(23, 59, 59);
             System.out.println(Timestamp.valueOf(LocalDateTime.of(localDate, timeStart)));
@@ -185,8 +183,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
     public Orders getOrderById(int id) {
         ResultSet resultSet = null;
         Orders order = new Orders();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_ORDER_BY_ID.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_ORDER_BY_ID.query)) {
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if(resultSet.next()){
@@ -214,8 +211,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
         Orders order = new Orders();
         Map<Orders, Integer> orderVsPrice = new HashMap<>();
         int totalPrice = 0;
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_MOST_EXPENSIVE_ORDER.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_MOST_EXPENSIVE_ORDER.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 order = getOrderById(resultSet.getInt("id"));
@@ -242,8 +238,7 @@ public class OrdersDaoSQLiteImpl implements OrdersDao {
         Orders order = new Orders();
         Map<Orders, Integer> orderVsPrice = new HashMap<>();
         int totalPrice = 0;
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_CHEAPEST_ORDER.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_CHEAPEST_ORDER.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 order = getOrderById(resultSet.getInt("id"));

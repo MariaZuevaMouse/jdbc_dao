@@ -2,14 +2,15 @@ package com.company.mz.service;
 
 import com.company.mz.dao.implementation.GuestDaoSQLiteImpl;
 import com.company.mz.entity.Guest;
+import com.company.mz.util.DatabaseType;
 
 import java.util.List;
 
 public class GuestService {
     private GuestDaoSQLiteImpl guestDao;
 
-    public GuestService() {
-        guestDao = new GuestDaoSQLiteImpl();
+    public GuestService(DatabaseType databaseType) {
+        guestDao = new GuestDaoSQLiteImpl(databaseType);
     }
 
     public void create(Guest guest) {

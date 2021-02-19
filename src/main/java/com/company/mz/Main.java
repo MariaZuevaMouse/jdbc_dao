@@ -12,6 +12,7 @@ import com.company.mz.entity.OrderVsMenuItems;
 import com.company.mz.entity.Orders;
 import com.company.mz.service.GuestService;
 import com.company.mz.service.OrderService;
+import com.company.mz.util.DatabaseType;
 import com.github.javafaker.Faker;
 
 import java.time.LocalDate;
@@ -21,10 +22,10 @@ import java.util.Date;
 
 public class Main {
     private static Faker faker = new Faker();
-    static CrudDao guestTable = new GuestDaoSQLiteImpl();
-    static CrudDao menuTable = new MenuItemsDaoSQLiteImpl();
-    static CrudDao orderTable = new OrdersDaoSQLiteImpl();
-    static RelationsCrud orderVsMenuTable = new OrderVsMenuDaoSQLiteImpl();
+    static CrudDao guestTable = new GuestDaoSQLiteImpl(DatabaseType.REAL);
+    static CrudDao menuTable = new MenuItemsDaoSQLiteImpl(DatabaseType.REAL);
+    static CrudDao orderTable = new OrdersDaoSQLiteImpl(DatabaseType.REAL);
+    static RelationsCrud orderVsMenuTable = new OrderVsMenuDaoSQLiteImpl(DatabaseType.REAL);
     static String testGuestName;
     static Guest testGuest;
 
@@ -54,7 +55,7 @@ public class Main {
 
 
         LocalDate dateOne = LocalDate.of(2021,02,16);
-        OrderService orderService = new OrderService();
+        OrderService orderService = new OrderService(DatabaseType.REAL);
         orderService.getAllOrders();
         orderService.getAllOrderInDate(dateOne);
         LocalTime time = LocalTime.of(00, 00);

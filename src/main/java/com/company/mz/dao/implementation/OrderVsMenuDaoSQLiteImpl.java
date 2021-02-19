@@ -5,6 +5,7 @@ import com.company.mz.entity.MenuItems;
 import com.company.mz.entity.OrderVsMenuItems;
 import com.company.mz.entity.Orders;
 import com.company.mz.util.DBConnection;
+import com.company.mz.util.DatabaseType;
 
 //import java.awt.*;
 import java.sql.Connection;
@@ -12,15 +13,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OrderVsMenuDaoSQLiteImpl implements RelationsCrud {
+public class OrderVsMenuDaoSQLiteImpl extends BaseSQLiteImplClass implements RelationsCrud {
+
+    public OrderVsMenuDaoSQLiteImpl(DatabaseType type) {
+        super(type);
+    }
+
     @Override
     public void create(Orders order, MenuItems menuItem, int quantity) {
         OrderVsMenuItems checkExist = read(order, menuItem);
         if(checkExist.getQuantity() != 0){
             update(order, menuItem, quantity);
         }else {
-            try(Connection connection = DBConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.CREATE.query)) {
+            try(PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.CREATE.query)) {
                 statement.setInt(1, order.getId());
                 statement.setInt(2, menuItem.getId());
                 statement.setInt(3, quantity);
@@ -36,8 +41,7 @@ public class OrderVsMenuDaoSQLiteImpl implements RelationsCrud {
     public OrderVsMenuItems read(Orders order, MenuItems menuItem) {
         ResultSet resultSet = null;
         OrderVsMenuItems orderVsMenuItem = new OrderVsMenuItems();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.READ.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.READ.query)) {
             statement.setInt(1, order.getId());
             statement.setInt(2, menuItem.getId());
             resultSet = statement.executeQuery();
@@ -62,8 +66,7 @@ public class OrderVsMenuDaoSQLiteImpl implements RelationsCrud {
 
     @Override
     public void update(Orders order, MenuItems menuItem, int quantity) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.UPDATE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.UPDATE.query)) {
             statement.setInt(1,quantity);
             statement.setInt(2, order.getId());
             statement.setInt(3, menuItem.getId());
@@ -75,8 +78,7 @@ public class OrderVsMenuDaoSQLiteImpl implements RelationsCrud {
 
     @Override
     public void delete(Orders order, MenuItems menuItem) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.DELETE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.DELETE.query)) {
             statement.setInt(1, order.getId());
             statement.setInt(2, menuItem.getId());
             statement.executeUpdate();

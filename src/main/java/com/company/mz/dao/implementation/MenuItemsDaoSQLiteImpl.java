@@ -4,6 +4,7 @@ import com.company.mz.dao.interfaces.MenuItemsDao;
 import com.company.mz.entity.Guest;
 import com.company.mz.entity.MenuItems;
 import com.company.mz.util.DBConnection;
+import com.company.mz.util.DatabaseType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,11 +13,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
+public class MenuItemsDaoSQLiteImpl extends BaseSQLiteImplClass implements MenuItemsDao {
+
+    public MenuItemsDaoSQLiteImpl(DatabaseType type) {
+        super(type);
+    }
+
     @Override
     public void create(MenuItems menuItems) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.CREATE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.CREATE.query)) {
             statement.setString(1, menuItems.getDishName());
             statement.setInt(2, menuItems.getPrice());
             statement.executeUpdate();
@@ -29,8 +34,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
     public MenuItems read(String dishName) {
         ResultSet resultSet = null;
         MenuItems menuItem = new MenuItems();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.READ.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.READ.query)) {
             statement.setString(1, dishName);
             resultSet = statement.executeQuery();
             if(resultSet.next()){
@@ -54,8 +58,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
 
     @Override
     public void update(MenuItems menuItems) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.UPDATE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.UPDATE.query)) {
             statement.setInt(1, menuItems.getPrice());
             statement.setString(2, menuItems.getDishName());
             statement.executeUpdate();
@@ -66,8 +69,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
 
     @Override
     public void delete(MenuItems menuItems) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.DELETE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.DELETE.query)) {
             statement.setString(1, menuItems.getDishName());
             statement.executeUpdate();
         }catch (SQLException e){
@@ -80,8 +82,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
         ResultSet resultSet =null;
         MenuItems menuItem;
         List<MenuItems> menuItemsList = new ArrayList<>();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_ALL.query)){
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_ALL.query)){
             resultSet = statement.executeQuery();
             while(resultSet.next()){
                 menuItem = new MenuItems();
@@ -109,8 +110,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
         ResultSet resultSet =null;
         MenuItems menuItem;
         List<MenuItems> menuItemsList = new ArrayList<>();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_ALL_ORDER_BY_NAME_ASC.query)){
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_ALL_ORDER_BY_NAME_ASC.query)){
             resultSet = statement.executeQuery();
             while(resultSet.next()){
                 menuItem = new MenuItems();
@@ -138,8 +138,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
         ResultSet resultSet =null;
         MenuItems menuItem;
         List<MenuItems> menuItemsList = new ArrayList<>();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_ALL_ORDER_BY_NAME_DESC.query)){
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_ALL_ORDER_BY_NAME_DESC.query)){
             resultSet = statement.executeQuery();
             while(resultSet.next()){
                 menuItem = new MenuItems();
@@ -166,8 +165,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
     public MenuItems getById(int id) {
         ResultSet resultSet = null;
         MenuItems menuItem = new MenuItems();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.READ.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.READ.query)) {
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if(resultSet.next()){
@@ -193,8 +191,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
     public MenuItems getPopularMenuItem() {
         ResultSet resultSet = null;
         MenuItems menuItem =new MenuItems();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_MOST_POPULAR.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_MOST_POPULAR.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 menuItem = getById(resultSet.getInt("menu_item_id"));
@@ -217,8 +214,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
     public MenuItems getUnPopularMenuItem() {
         ResultSet resultSet = null;
         MenuItems menuItem =new MenuItems();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_UNPOPULAR.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_UNPOPULAR.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 menuItem = getById(resultSet.getInt("menu_item_id"));
@@ -241,8 +237,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
     public MenuItems getMostExpensiveMenuItem() {
         ResultSet resultSet = null;
         MenuItems menuItem = new MenuItems();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_MOST_EXPENSIVE.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_MOST_EXPENSIVE.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 menuItem.setId(resultSet.getInt("id"));
@@ -267,8 +262,7 @@ public class MenuItemsDaoSQLiteImpl implements MenuItemsDao {
     public MenuItems getCheapestMenuItem() {
         ResultSet resultSet = null;
         MenuItems menuItem = new MenuItems();
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_CHEAPEST.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_CHEAPEST.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 menuItem.setId(resultSet.getInt("id"));
