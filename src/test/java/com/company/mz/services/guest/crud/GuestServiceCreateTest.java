@@ -1,4 +1,4 @@
-package com.company.mz.services.guest;
+package com.company.mz.services.guest.crud;
 
 import com.company.mz.BaseTest;
 import com.company.mz.entity.Guest;
@@ -8,11 +8,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 public class GuestServiceCreateTest extends BaseTest {
-
-    @BeforeClass
-    public void beforeClass() {
-        guestService = new GuestService(DatabaseType.TEST);
-    }
 
     @Test
     public void positiveCreteGuestTest() {
@@ -44,7 +39,7 @@ public class GuestServiceCreateTest extends BaseTest {
         Assert.assertNotNull(readGuest.getId());
     }
 
-    @Test(enabled = false,  description = "BUG: Guest with null ID can be created")
+    @Test(enabled = false, description = "BUG: Guest with null NAME can be created")
     public void createGuestWithNullNameTest() {
         testGuest = new Guest();
         guestService.create(testGuest);

@@ -21,7 +21,7 @@ public class MenuService {
 
     public MenuItems read(String s) {
         MenuItems menuItem = menuDao.read(s);
-        System.out.println("New menu item created: " + menuItem);
+        System.out.println("menu item read: " + menuItem);
         return menuItem;
     }
 

@@ -87,12 +87,20 @@ public class OrderVsMenuDaoSQLiteImpl extends BaseSQLiteImplClass implements Rel
         }
     }
 
+    public void clearTable(){
+        try(PreparedStatement statement = connection.prepareStatement(OrdersVsMenuQueries.CLEAR_TABLE.query)) {
+            statement.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     enum OrdersVsMenuQueries{
         CREATE("INSERT INTO order_vs_menu_items (order_id, menu_item_id, dish_count) VALUES (?, ?, ?);"),
         READ("SELECT * FROM order_vs_menu_items WHERE order_id = (?) AND menu_item_id =(?);"),
         UPDATE("UPDATE order_vs_menu_items SET dish_count = (?) WHERE order_id = (?) AND menu_item_id = (?);"),
         DELETE("DELETE FROM order_vs_menu_items WHERE order_id = (?) AND menu_item_id = (?);"),
-        CHECK_ORDER_EXIST("");
+        CLEAR_TABLE("DELETE FROM order_vs_menu_items");
 
         String query;
 

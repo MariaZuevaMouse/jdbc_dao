@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS guest (
 DROP TABLE IF EXISTS orders;
 CREATE TABLE IF NOT EXISTS orders (
     id       INTEGER PRIMARY KEY AUTOINCREMENT
-                     NOT NULL,
+                     NOT NULL ,     --REFERENCES order_vs_menu_items (order_id) ON DELETE CASCADE
     order_date     TIMESTAMP    NOT NULL,
     guest_id INTEGER REFERENCES Guest (id)
 );
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS orders (
 DROP TABLE IF EXISTS order_vs_menu_items;
 CREATE TABLE IF NOT EXISTS order_vs_menu_items (
     order_id    INTEGER NOT NULL
-                       REFERENCES orders (id),
+                       REFERENCES orders (id) ON DELETE CASCADE,
     menu_item_id INTEGER NOT NULL
                        REFERENCES menu_items (id),
     dish_count INTEGER NOT NULL
@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS order_vs_menu_items (
     SELECT * FROM orders WHERE guest_id =2 AND order_date= (SELECT MAX(order_date) FROM orders WHERE guest_id=2);
     SELECT * FROM orders WHERE guest_id =(?) AND order_date= (SELECT MAX(order_date) FROM orders WHERE guest_id=(?));
     UPDATE orders SET guest_id = (?) WHERE id = (?);
+    UPDATE orders SET order_date =(?) WHERE id =(?);
     DELETE FROM orders WHERE order_date = (?);
 --order_vs_menu_items
     INSERT INTO order_vs_menu_items (order_id, menu_item_id, dish_count) VALUES (?, ?, ?);
@@ -94,6 +95,8 @@ SELECT * FROM orders;
 SELECT * FROM orders WHERE id=?;
 SELECT * FROM orders ORDER BY id DESC LIMIT 1;
 SELECT * FROM orders WHERE order_date = ?;
+-- get all orders with total cost
+SELECT order_id, SUM(dish_count*price) as total_price , name FROM join_all_tabels GROUP BY order_id ORDER BY total_price;
 -- cheapest order
 SELECT order_id, SUM(dish_count*price) as total_price FROM combined_info GROUP BY order_id ORDER BY total_price LIMIT 1;
 -- most expensive

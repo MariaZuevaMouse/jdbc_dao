@@ -45,21 +45,22 @@ public class Main {
 
 
 //        createTestMenu();
-//        for (int i = 0; i < 3; i++) {
-//            testDataBaseData();
-//        }
-//        GuestService guestService = new GuestService();
-//        guestService.getAllGuestList();
-//        guestService.getAllGuestListAscOrder();
-//        guestService.getAllGuestListDescOrder();
+        for (int i = 0; i < 3; i++) {
+            testDataBaseData();
+        }
+        GuestService guestService = new GuestService(DatabaseType.REAL);
+        guestService.getAllGuestList();
+        guestService.getAllGuestListAscOrder();
+        guestService.getAllGuestListDescOrder();
 
 
-        LocalDate dateOne = LocalDate.of(2021,02,16);
-        OrderService orderService = new OrderService(DatabaseType.REAL);
-        orderService.getAllOrders();
-        orderService.getAllOrderInDate(dateOne);
-        LocalTime time = LocalTime.of(00, 00);
-        LocalDateTime dateTime = LocalDateTime.of(dateOne,time);
+//        LocalDate dateOne = LocalDate.of(2021,02,16);
+//        OrderService orderService = new OrderService(DatabaseType.REAL);
+//        orderService.getAllOrders();
+//        orderService.getAllOrderInDate(dateOne);
+//        LocalTime time = LocalTime.of(00, 00);
+//        LocalDateTime dateTime = LocalDateTime.of(dateOne,time);
+
 
 
     }
@@ -81,10 +82,10 @@ public class Main {
 //        orderVsMenuTable.create(order, menuItem1, (int) Math.random()*10);
 //        orderVsMenuTable.create(order, menuItem2, (int) Math.random()*10);
 //        orderVsMenuTable.create(order, menuItem3, (int) Math.random()*10);
-        orderVsMenuTable.create(order, menuItem4, 1+(int) Math.random()*10);
-        orderVsMenuTable.create(order, menuItem5, 1+(int) Math.random()*10);
-        orderVsMenuTable.create(order, menuItem6, 1+(int) Math.random()*10);
-        orderVsMenuTable.create(order, menuItem7, 1+(int) Math.random()*10);
+        orderVsMenuTable.create(order, menuItem4, 1+(int) (Math.random()*10));
+        orderVsMenuTable.create(order, menuItem5, 1+(int) (Math.random()*10));
+        orderVsMenuTable.create(order, menuItem6, 1+(int) (Math.random()*10));
+        orderVsMenuTable.create(order, menuItem7, 1+(int) (Math.random()*10));
     }
 
     private static void createTestMenu() {

@@ -165,7 +165,7 @@ public class MenuItemsDaoSQLiteImpl extends BaseSQLiteImplClass implements MenuI
     public MenuItems getById(int id) {
         ResultSet resultSet = null;
         MenuItems menuItem = new MenuItems();
-        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.READ.query)) {
+        try(PreparedStatement statement = connection.prepareStatement(MenuItemQueries.GET_BY_ID.query)) {
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if(resultSet.next()){
@@ -288,6 +288,7 @@ public class MenuItemsDaoSQLiteImpl extends BaseSQLiteImplClass implements MenuI
         READ("SELECT * FROM menu_items WHERE name = (?);"),
         UPDATE("UPDATE menu_items SET price = (?) where name = (?);"),
         DELETE("DELETE FROM menu_items WHERE name = (?);"),
+        GET_BY_ID("SELECT * FROM menu_items WHERE id = (?);"),
         GET_ALL("SELECT * FROM menu_items ;"),
         GET_ALL_ORDER_BY_NAME_ASC("SELECT * FROM menu_items ORDER  BY name;"),
         GET_ALL_ORDER_BY_NAME_DESC("SELECT * FROM menu_items ORDER  BY name DESC;"),

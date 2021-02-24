@@ -3,6 +3,7 @@ package com.company.mz.dao.implementation;
 import com.company.mz.dao.interfaces.OrdersDao;
 import com.company.mz.entity.Guest;
 import com.company.mz.entity.Orders;
+import com.company.mz.entity.statisticentity.OrderVsCost;
 import com.company.mz.util.DBConnection;
 import com.company.mz.util.DatabaseType;
 
@@ -41,7 +42,7 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 order.setId(resultSet.getInt("id"));
-                order.setDate(resultSet.getDate("order_date"));
+                order.setDate(resultSet.getTimestamp("order_date").toLocalDateTime());
                 order.setGuestId(resultSet.getInt("guest_id"));
             }
         }catch (SQLException e){
@@ -68,7 +69,7 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 order.setId(resultSet.getInt("id"));
-                order.setDate(resultSet.getDate("order_date"));
+                order.setDate(resultSet.getTimestamp("order_date").toLocalDateTime());
                 order.setGuestId(resultSet.getInt("guest_id"));
             }
         }catch (SQLException e){
@@ -120,6 +121,17 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
     }
 
     @Override
+    public void updateOrderDate(Orders orders) {
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.UPDATE_ORDER_DATE.query)) {
+            statement.setTimestamp(1, Timestamp.valueOf(orders.getDate()));
+            statement.setInt(2, orders.getId());
+            statement.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public List<Orders> getAllOrders() {
         List<Orders> ordersList = new ArrayList<>();
         ResultSet resultSet = null;
@@ -129,7 +141,7 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
             while (resultSet.next()){
                 order = new Orders();
                 order.setId(resultSet.getInt("id"));
-                order.setDate(resultSet.getDate("order_date"));
+                order.setDate(resultSet.getTimestamp("order_date").toLocalDateTime());
                 order.setGuestId(resultSet.getInt("guest_id"));
                 ordersList.add(order);
             }
@@ -161,7 +173,7 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
             resultSet = statement.executeQuery();
             while (resultSet.next()){
                 order.setId(resultSet.getInt("id"));
-                order.setDate(resultSet.getDate("order_date"));
+                order.setDate(resultSet.getTimestamp("order_date").toLocalDateTime());
                 order.setGuestId(resultSet.getInt("guest_id"));
                 ordersList.add(order);
             }
@@ -180,6 +192,34 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
     }
 
     @Override
+    public List<OrderVsCost> getAllOrderWithTotalCost() {
+        List<OrderVsCost> ordersVsCostList = new ArrayList<>();
+        ResultSet resultSet = null;
+        OrderVsCost orderVsCost ;
+        try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_ALL_ORDERS_WITH_COST.query)) {
+            resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                orderVsCost = new OrderVsCost();
+                orderVsCost.setOrderId(resultSet.getInt(1));
+                orderVsCost.setTotalPrice(resultSet.getInt(2));
+                orderVsCost.setGuestName(resultSet.getString(3));
+                ordersVsCostList.add(orderVsCost);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            if(resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return ordersVsCostList;
+    }
+
+    @Override
     public Orders getOrderById(int id) {
         ResultSet resultSet = null;
         Orders order = new Orders();
@@ -188,7 +228,7 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
             resultSet = statement.executeQuery();
             if(resultSet.next()){
                 order.setId(resultSet.getInt("id"));
-                order.setDate(resultSet.getDate("order_date"));
+                order.setDate(resultSet.getTimestamp("order_date").toLocalDateTime());
                 order.setGuestId(resultSet.getInt("guest_id"));
             }
         }catch (SQLException e){
@@ -214,7 +254,7 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
         try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_MOST_EXPENSIVE_ORDER.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
-                order = getOrderById(resultSet.getInt("id"));
+                order = getOrderById(resultSet.getInt("order_id"));
                 totalPrice = resultSet.getInt("total_price");
             }
         }catch (SQLException e){
@@ -241,7 +281,7 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
         try(PreparedStatement statement = connection.prepareStatement(OrderQueries.GET_CHEAPEST_ORDER.query)) {
             resultSet = statement.executeQuery();
             if(resultSet.next()){
-                order = getOrderById(resultSet.getInt("id"));
+                order = getOrderById(resultSet.getInt("order_id"));
                 totalPrice = resultSet.getInt("total_price");
             }
         }catch (SQLException e){
@@ -264,8 +304,10 @@ public class OrdersDaoSQLiteImpl extends BaseSQLiteImplClass implements OrdersDa
         READ("SELECT * FROM orders WHERE guest_id =(?) AND order_date= (SELECT MAX(order_date) FROM orders WHERE guest_id=(?));"),
         UPDATE("UPDATE orders SET guest_id = (?) WHERE id = (?);"),
         DELETE(" DELETE FROM orders WHERE id = (?);"),
+        UPDATE_ORDER_DATE("UPDATE orders SET order_date =(?) WHERE id =(?);"),
         FIND_LAST_GUEST_ID("SELECT * FROM guest WHERE id = (SELECT MAX(id) FROM GUEST);"),
         GET_ALL_ORDERS("SELECT * FROM orders;"),
+        GET_ALL_ORDERS_WITH_COST("SELECT order_id, SUM(dish_count*price) as total_price , name FROM join_all_tabels GROUP BY order_id ORDER BY total_price;"),
         GET_ORDER_BY_ID("SELECT * FROM orders WHERE id=?"),
         GET_LAST_ORDER("SELECT * FROM orders ORDER BY id DESC LIMIT 1;"),
         GET_ALL_ORDERS_IN_DATE("SELECT * FROM orders WHERE order_date BETWEEN ? AND ?;"),

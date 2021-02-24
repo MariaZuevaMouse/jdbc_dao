@@ -1,4 +1,4 @@
-package com.company.mz.services.guest;
+package com.company.mz.services.guest.crud;
 
 import com.company.mz.BaseTest;
 import com.company.mz.entity.Guest;
@@ -10,30 +10,24 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class GuestServiceReadTest extends BaseTest {
-    @BeforeClass
-    public void beforeClass() {
-        guestService = new GuestService(DatabaseType.TEST);
-    }
+public class GuestServiceUpdateTest extends BaseTest {
+    String newName ;
 
     @BeforeMethod
     public void setUp() {
+//        createTestGuest();
         testGuest = new Guest().withName(faker.name().fullName());
         guestService.create(testGuest);
         testGuest = guestService.read(testGuest.getName());
     }
 
     @Test
-    public void positiveReadByNameTest() {
-        readGuest = guestService.read(testGuest.getName());
+    public void updateNameTest() {
+        newName = faker.name().fullName();
+        testGuest.setName(newName);
+        guestService.update(testGuest);
 
-        Assert.assertEquals(testGuest.getName(), readGuest.getName());
-        Assert.assertEquals(testGuest.getId(), readGuest.getId());
-    }
-
-    @Test
-    public void positiveReadByIdTest() {
-        Guest readGuest = guestService.getGuestById(testGuest.getId());
+        readGuest = guestService.getGuestById(testGuest.getId());
 
         Assert.assertEquals(testGuest.getName(), readGuest.getName());
         Assert.assertEquals(testGuest.getId(), readGuest.getId());
@@ -41,6 +35,8 @@ public class GuestServiceReadTest extends BaseTest {
 
     @AfterMethod
     public void tearDown() {
+//        removeTestGuest();
         guestService.delete(testGuest);
     }
+
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.With;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Data
@@ -14,7 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Orders {
     private int id;
-    private Date date;
+    private LocalDateTime date;
     private int guestId;
 
 }

@@ -3,7 +3,12 @@
 <suite name="Guest Service tests">
     <test name="Guest CRUD test">
         <packages>
-            <package name="com.company.mz.services.guest" />
+            <package name="com.company.mz.services.guest.crud" />
+        </packages>
+    </test>
+    <test name="Info">
+        <packages>
+            <package name="com.company.mz.services.guest.info"/>
         </packages>
     </test>
 </suite>

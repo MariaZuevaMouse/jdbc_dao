@@ -3,8 +3,12 @@ package com.company.mz.service;
 import com.company.mz.dao.implementation.OrdersDaoSQLiteImpl;
 import com.company.mz.entity.Guest;
 import com.company.mz.entity.Orders;
+import com.company.mz.entity.statisticentity.OrderVsCost;
 import com.company.mz.util.DatabaseType;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +42,23 @@ public class OrderService {
         System.out.println("Order was removed: " + orders);
     }
 
+    public void updateOrderDate(Orders orders) {
+        ordersDaoSQLite.updateOrderDate(orders);
+        System.out.println("Order date was updated: " + orders);
+    }
+
+    public Orders getOrderById(int id){
+        Orders read = ordersDaoSQLite.getOrderById(id);
+        System.out.println("Read Order by id: " + id + " was " + read);
+        return read;
+    }
+
+    public Orders getLastOrder(){
+        Orders read = ordersDaoSQLite.getLastOrder();
+        System.out.println("Last created order was : " + read);
+        return read;
+    }
+
     public List<Orders> getAllOrders() {
         List<Orders> allOrders = ordersDaoSQLite.getAllOrders();
         System.out.println("\n all order list: ");
@@ -45,11 +66,18 @@ public class OrderService {
         return allOrders;
     }
 
+    public List<OrderVsCost> getAllOrderWithTotalCost(){
+        List<OrderVsCost> allOrderWithTotalCost = ordersDaoSQLite.getAllOrderWithTotalCost();
+        System.out.println("\n orders with total costs: (orderId, totalPrice, GuestName");
+        allOrderWithTotalCost.forEach(System.out::println);
+        return allOrderWithTotalCost;
+    }
+
     public List<Orders> getAllOrderInDate(LocalDate localDate) {
         List<Orders> allOrderInDate = ordersDaoSQLite.getAllOrderInDate(localDate);
-        System.out.println("all orders in date: " + localDate);
+        System.out.println(" all orders in date: " + localDate);
         allOrderInDate.forEach(System.out::println);
-        return null;
+        return allOrderInDate;
     }
 
     public Map<Orders,Integer> getTheMostExpensive() {

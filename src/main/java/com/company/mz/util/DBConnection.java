@@ -35,9 +35,9 @@ public class DBConnection {
         try {
             Class.forName(DB_DRIVER);
             if(type == DatabaseType.TEST){
-                connection = getRealDBConnection();
-            }else {
                 connection = getTestDbConnection();
+            }else {
+                connection = getRealDBConnection();
             }
         } catch (ClassNotFoundException |SQLException e) {
             e.printStackTrace();
